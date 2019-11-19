@@ -1,0 +1,152 @@
+<pre class='metadata'>
+Title: CSS Observers Level 1
+Shortname: css-observers
+Level: 1
+Status: UD
+Group: CSSWG
+Work Status: exploring
+URL: TODO
+Editor: Brian Kardell, Igalia, bkardell@igalia.com
+Editor: Oriol Brufau, Igalia, obrufau@igalia.com, w3cid 108473
+Abstract: Yada yada abstract
+</pre>
+
+<h2 id="intro">
+Introduction</h2>
+
+	Yada yada introduction
+
+<h3 id="placement">
+Module interactions</h3>
+
+	Yada yada interactions
+
+<h3 id="values">
+Values</h3>
+
+	This specification follows the
+	<a href="https://www.w3.org/TR/CSS2/about.html#property-defs">CSS property
+	definition conventions</a> from [[!CSS2]].
+
+	In addition to the property-specific values listed in their definitions,
+	all properties defined in this specification also accept the
+	<a href="https://www.w3.org/TR/css3-values/#common-keywords">CSS-wide keywords</a>
+	as their property value. For readability it has not been repeated explicitly.
+
+<h2 id='observer-pseudo'>
+Observing Elements: The ''::observer'' pseudo-element</h2>
+
+	The <dfn selector>::observer</dfn> pseudo-element
+	can be used to define observers for the <a>originating element</a>.
+	It's an abstract pseudo-element that does not generate any box.
+
+	Only <a>observe properties</a> apply to an ''::observer'' pseudo-element.
+
+	An ''::observer'' pseudo-element does not inherit from any element
+	and is not inherited from.
+
+	A <a>selector</a> containing both an ''::observer'' pseudo-element
+	and an '':observed()'' pseudo-class is invalid.
+
+	Note: This avoids circularity issues.
+
+<h2 id='observe-properties'>
+Defining observers: the observe properties</h2>
+
+	This specification introduces <dfn>observe properties</dfn>,
+	new CSS properties that can be used to define observers for elements.
+
+<h3 id='observe-resize-properties'>
+Defining resize observers: The 'observe-resize-width' and 'observe-resize-height' properties</h3>
+
+	<pre class="propdef">
+	Name: observe-resize-width
+	Value: none | <<breakpoint>>#
+	Initial: none
+	Applies to: ''::observer'' pseudo-elements
+	Inherited: no
+	Computed value: as specified, but with lengths made absolute
+	Animatable: no
+	Media: all
+	</pre>
+
+	<pre class="propdef">
+	Name: observe-resize-height
+	Value: none | <<breakpoint>>#
+	Initial: none
+	Applies to: ''::observer'' pseudo-elements
+	Inherited: no
+	Computed value: as specified, but with lengths made absolute
+	Animatable: no
+	Media: all
+	</pre>
+
+	<pre class='prod'>
+	<dfn><<breakpoint>></dfn> = <<custom-ident>> <<length>></pre>
+
+	The 'observe-resize-width' and 'observe-resize-height' properties
+	define resize observers for the <a>containing block</a>
+	of the <a>originating element</a> [[!RESIZE-OBSERVER-1]].
+
+	Values have the following meanings:
+
+	<dl dfn-type="value" dfn-for="observe-resize-width, observe-resize-height">
+		<dt><dfn>none</dfn>
+		<dd>
+			Indicates that CSS won't observe the size
+			of the <a>containing block</a> of the <a>originating element</a>
+			in the corresponding axis.
+
+		<dt><dfn><<breakpoint>>#</dfn>
+		<dd>
+			Specifies a list of breakpoints for the size
+			of the containing block of the <a>originating element</a>
+			in the corresponding axis.
+
+			The <a>intrinsic size contributions</a>
+			of the <a>originating element</a> to its <a>containing block</a>
+			will be zero.
+
+			Note: This avoids circularity issues.
+	</dl>
+
+<h2 id='observed-pseudo'>
+Using Observed Values: The ':observed()' pseudo-class</h2>
+
+	The <dfn selector>:observed()</dfn> function pseudo-class
+	can be used to select elements depending on the values observed
+	by the observers defined in its ''::observer'' pseudo-element.
+
+	The <a>:observed()</a> pseudo-class has the syntax:
+
+	<pre>
+	:observed( <<observer-type>> <<custom-ident>> )
+	</pre>
+
+	Where <dfn><<observer-type>></dfn> can be:
+	<dl class="switch">
+		<dt>''resize-width''
+		<dd>The pseudo-class matches an element
+			if the 'observe-resize-width' property of its ''::observer''
+			contains a <<breakpoint>> with the specified <<custom-ident>>
+			and a <<length>> smaller than or equal to
+			the width of the element's containing block.
+		<dt>''resize-height''
+		<dd>The pseudo-class matches an element
+			if the 'observe-resize-height' property of its ''::observer''
+			contains a <<breakpoint>> with the specified <<custom-ident>>
+			and a <<length>> smaller than or equal to
+			the height of the element's containing block.
+	</dl>
+
+
+Privacy and Security Considerations {#priv-sec}
+===============================================
+
+This specification introduces no new security considerations.
+
+Resize observers can be used to query the size of the display area,
+which could be used to fingerprint users.
+However, the same information can already be obtained
+via [[mediaqueries-4#mf-dimensions|viewport media queries]] or scripting,
+so this specification doesn't increase the <a>fingerprinting surface</a>.

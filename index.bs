@@ -8,6 +8,7 @@ Work Status: exploring
 URL: TODO
 Editor: Brian Kardell, Igalia, bkardell@igalia.com
 Editor: Oriol Brufau, Igalia, obrufau@igalia.com, w3cid 108473
+Editor: Tom Hodgins, Invited Expert, tomhodgins@gmail.com 
 Abstract: Yada yada abstract
 </pre>
 
